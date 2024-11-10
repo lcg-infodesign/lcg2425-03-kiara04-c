@@ -1,0 +1,13 @@
+column name;description;source
+id;Rank in order of length;https://en.wikipedia.org/wiki/List_of_river_systems_by_length
+name;Name of the rivers composing the system;https://en.wikipedia.org/wiki/List_of_river_systems_by_length
+countries;countries touched by the rivers system;https://en.wikipedia.org/wiki/List_of_river_systems_by_length
+length;length (km);https://en.wikipedia.org/wiki/List_of_river_systems_by_length
+area;Drainage area (km²);https://en.wikipedia.org/wiki/List_of_river_systems_by_length
+discharge;Average discharge (m³/s);https://en.wikipedia.org/wiki/List_of_river_systems_by_length
+outflow;Outflow basin;https://en.wikipedia.org/wiki/List_of_river_systems_by_length
+continent;Outflow cointinent;ChatGPT
+tributaries;Amount of tributaries to the system;ChatGPT
+min_temp;Minimum temperature (°C);ChatGPT
+max_temp;Maximum temperature (°C);ChatGPT
+avg_temp;Average temperature (°C);ChatGPT
