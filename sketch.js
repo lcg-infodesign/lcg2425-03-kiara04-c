@@ -16,17 +16,30 @@ function setup() {
 
 function draw() {
   background(255);
-  // Funzione goccia
+
+  //funzione goccia
   push();
   translate(50, 0);
   waterDrop();
   pop();
 }
 
-function waterDrop() {
+function riverNames(){
+  //nomi fiumi
+  fill("black");
+  noStroke();
+  textSize(16);
+  
+  for(let i=0; i<riversData.getRowCount(); i++){
+    let riverNames = riversData.getString(n, "name");
+    let offset = i * 220;
+    text(riverNames[n], 223 + offset, 360 + n * 220);
+  }
+}
+
+function waterDrop(offsetX, off) {
   fill("lightblue");
   noStroke();
-  
   let curvePerRiga = 5;
   let distanzaTraCurve = 220; //distanza orizzontale
   //numero righe necessarie
@@ -43,18 +56,14 @@ function waterDrop() {
            450 + offsetX, 300 + offsetY,
            223 + offsetX, 60 + offsetY);
   }
-
-  //nome fiumi
   fill("black");
+  noStroke();
   textSize(16);
-  for (let i = 0; i < riversData.getRowCount(); i++) {
-    let riverNames = riversData.getString(i, "name");
-    let riverNameArray = riverNames.split("�");
-    let offsetX = i * 220;
-    for (let j = 0; j < riverNameArray.length; j++) {
-      text(riverNameArray[j], 223 + offsetX, 360 + j * 20);
-    }
-  }
+  text("ciao", 20, 20);
+  textAlign(CENTER, CENTER);
+  let riverNames = riversData.getString(n, "name");
+  let offset = i * 220;
+  text(riverNames[n], 223 + offset, 380 + n * 220);
 
   // Disegno dei pallini colorati per continente
   for (let i = 0; i < riversData.getRowCount(); i++) {
