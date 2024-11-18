@@ -10,7 +10,7 @@ canvas {
 h1 {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-weight: bolder;
-  font-size: 40px;
+  font-size: 50px;
 }
 
 h2 {
@@ -24,11 +24,11 @@ p {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: underline;
   color: black;
 }
 
 a:hover {
-  color: rgb(18, 93, 184);
+  color: rgb(0, 195, 255);
 }
 

@@ -1,97 +1,85 @@
-let riversData;
-let dropSize = 200;
-let v_padding = 300; //verticale
-let o_padding = 20; //orizzontale
+let data;
+let dataObj;
 
 function preload() {
-  riversData = loadTable("../assets/Data.CSV", "csv", "header");
+  data = loadTable("assets/Data.CSV", "csv", "header");
 }
 
+let circleSize = 130;
+let padding = 20;
+let maxCirclesPerRow = 5; // Numero di cerchi per riga
+
 function setup() {
-  let totalHeight = dropSize * 20 + v_padding * 7;
-  let totalWidth = dropSize * 5 + o_padding * 20;
+  let totalHeight = circleSize * 40 + padding * 20;
+  let totalWidth = circleSize * 10;
   createCanvas(totalWidth, totalHeight);
-  angleMode(DEGREES);
+  background("white");
+  dataObj = data.getObject();
+
+  // Posizione iniziale
+  let xPos = padding + circleSize / 2;
+  let yPos = padding + circleSize;
+  for (let i = 0; i < data.getRowCount(); i++) {
+    let item = dataObj[i];
+    // Disegno il cerchio
+    push();
+    translate (220, 0);
+    drawGlyph(xPos, yPos, circleSize, item);
+    pop();
+    // Posizione successiva
+    if ((i + 1) % maxCirclesPerRow === 0) {
+      xPos = padding + circleSize / 2;
+      yPos += circleSize * 2 + padding;
+    } else {
+      xPos += circleSize + padding * 4;
+    }
+  }
 }
 
 function draw() {
-  background(255);
-
-  //funzione goccia
-  push();
-  translate(50, 0);
-  waterDrop();
-  pop();
 }
 
-function riverNames(){
-  //nomi fiumi
-  fill("black");
-  noStroke();
-  textSize(16);
+function drawGlyph(x, y, size){
+  let Names = data.getColumn('name');
+  let Continent = data.getColumn('continent');
+  //let fillHeight = 0;  // Altezza del riempimento
   
-  for(let i=0; i<riversData.getRowCount(); i++){
-    let riverNames = riversData.getString(n, "name");
-    let offset = i * 220;
-    text(riverNames[n], 223 + offset, 360 + n * 220);
-  }
-}
-
-function waterDrop(offsetX, off) {
+  // Disegno il cerchio con sfondo
   fill("lightblue");
   noStroke();
-  let curvePerRiga = 5;
-  let distanzaTraCurve = 220; //distanza orizzontale
-  //numero righe necessarie
-  for (let i = 0; i < riversData.getRowCount(); i++) {
-    //colonne e righe
-    let colonna = i % curvePerRiga;
-    let riga = Math.floor(i / curvePerRiga);
-    //offset orizzontale e verticale
-    let offsetX = colonna * distanzaTraCurve;
-    let offsetY = riga * 300;
-    //disegna curva
-    bezier(223 + offsetX, 60 + offsetY,
-           0 + offsetX, 300 + offsetY,
-           450 + offsetX, 300 + offsetY,
-           223 + offsetX, 60 + offsetY);
-  }
+  ellipse(x, y, size, size);
+  // Scrivo il nome sotto il cerchio
   fill("black");
   noStroke();
+  textAlign (CENTER, CENTER);
   textSize(16);
-  text("ciao", 20, 20);
-  textAlign(CENTER, CENTER);
-  let riverNames = riversData.getString(n, "name");
-  let offset = i * 220;
-  text(riverNames[n], 223 + offset, 380 + n * 220);
+  text (Names, x, y + padding + (circleSize / 2));
+  textSize(12);
+  text(Continent, x, y + padding * 2 + (circleSize / 2));
 
-  // Disegno dei pallini colorati per continente
-  for (let i = 0; i < riversData.getRowCount(); i++) {
-    let offsetX = i * 220;
-    // Recupero il continente dal CSV
-    let continent = riversData.getString(i, "continent").toLowerCase();
-    // Ottieni il colore associato al continente
-    let circleColor = getContinentColor(continent);
-    // Disegna il pallino sopra la curva
-    fill(circleColor);
+  // Livello per portata
+  //fill(100, 150, 255, 150);
+  //angleMode(DEGREES);
+  //arc(x, y, size, size, -PI / 2, map(0, fillHeight, size, -PI / 2, PI / 2), OPEN);
+  
+  let Portata = data.getColumn('discharge');
+  for (let j = 0; j < Portata; j++) {
+    //disegna pallini
     noStroke();
-    ellipse(223 + offsetX, 50, 15, 15);  // Pallino di 15px di diametro
-  }
-}
-
-// Funzione per mappare i continenti ai colori
-function getContinentColor(continent) {
-  if (continent === 'africa') {
-    return color("red");
-  } else if (continent === 'asia') {
-    return color("blue");
-  } else if (continent === 'europe') {
-    return color("green");
-  } else if (continent === 'south america') {
-    return color("yellow");
-  } else if (continent === 'north america') {
-    return color("orange");
-  } else if (continent === 'oceania') {
-    return color("purple");
+    fill(100, 150, 255, 150);
+    // Creo angolo casuale
+    let angle = random(TWO_PI);
+    let radius = random(size / 2);
+    push();
+    //mi pongo al centro del glifo
+    translate(x, y);
+    //ruoto in base alla variabile angle
+    rotate(angle);
+    //mi sposto in funzione del raggio
+    translate(radius, 0);
+    // disegno il pallino
+    ellipse(0, 0, 2, 2);
+    //ripristino assi
+    pop();
   }
 }
