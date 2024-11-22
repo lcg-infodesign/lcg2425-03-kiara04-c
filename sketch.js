@@ -2,84 +2,99 @@ let data;
 let dataObj;
 
 function preload() {
-  data = loadTable("assets/Data.CSV", "csv", "header");
+  data = loadTable("assets/riverData.csv", "csv", "header");
 }
 
+// colori
+let pageColor = "#17374c";
+let circleColor = "#61a5bc";
+let lineColor = "#61a5bc";
+let textColor = "#cde0e7";
+let dotColor = "#61a5bc";
 let circleSize = 130;
 let padding = 20;
-let maxCirclesPerRow = 5; // Numero di cerchi per riga
 
 function setup() {
-  let totalHeight = circleSize * 40 + padding * 20;
-  let totalWidth = circleSize * 10;
-  createCanvas(totalWidth, totalHeight);
-  background("white");
+  let totalHeight = 120 + circleSize * 2 * data.getRowCount() + padding * data.getRowCount();
+  createCanvas(windowWidth, totalHeight);
+  background(pageColor);
   dataObj = data.getObject();
 
-  // Posizione iniziale
-  let xPos = padding + circleSize / 2;
+  let xPos = padding + circleSize * 2 + 100;
   let yPos = padding + circleSize;
+  //ciclo for per disegnare un glifo per ogni riga
   for (let i = 0; i < data.getRowCount(); i++) {
+    //carico i dati della riga
     let item = dataObj[i];
-    // Disegno il cerchio
-    push();
-    translate (220, 0);
     drawGlyph(xPos, yPos, circleSize, item);
-    pop();
-    // Posizione successiva
-    if ((i + 1) % maxCirclesPerRow === 0) {
-      xPos = padding + circleSize / 2;
-      yPos += circleSize * 2 + padding;
-    } else {
-      xPos += circleSize + padding * 4;
-    }
+    yPos = yPos + padding + circleSize * 2;
   }
 }
 
 function draw() {
+  //animare i pallini
+  for (let i = 0; i < droplets.length; i++) {
+    droplets[i].move(); // Muovi i pallini
+    droplets[i].display(); // Disegna i pallini
+  }
 }
 
-function drawGlyph(x, y, size){
-  let Names = data.getColumn('name');
-  let Continent = data.getColumn('continent');
-  //let fillHeight = 0;  // Altezza del riempimento
-  
-  // Disegno il cerchio con sfondo
-  fill("lightblue");
+function drawGlyph(x, y, size, rowData) {
+  //disegno sfondo
+  fill(circleColor);
   noStroke();
-  ellipse(x, y, size, size);
-  // Scrivo il nome sotto il cerchio
-  fill("black");
+  beginShape();
+  vertex(x, y - size + 50);  // Punta della goccia
+  bezierVertex(x - size / 2, y - size / 4 + 10, x - size / 2, y + size / 2, x, y + size / 2); // Curva sinistra
+  bezierVertex(x + size / 2, y + size / 2, x + size / 2 , y - size / 4 + 10, x, y - size + 50); // Curva destra
+  endShape(CLOSE);
+  //lunghezza
+  stroke(circleColor);
+  strokeWeight (6);
+  drawWavyLine(x + 100, y + 50, rowData.length);
+  fill(textColor);
   noStroke();
-  textAlign (CENTER, CENTER);
+  textAlign(CENTER, CENTER);
+  textSize(14);
+  text(rowData.length + 'km', x, y + size / 2 + 50);
+  //scrivo il nome
+  fill(textColor);
+  noStroke();
+  textAlign(CENTER, CENTER);
   textSize(16);
-  text (Names, x, y + padding + (circleSize / 2));
-  textSize(12);
-  text(Continent, x, y + padding * 2 + (circleSize / 2));
-
-  // Livello per portata
-  //fill(100, 150, 255, 150);
-  //angleMode(DEGREES);
-  //arc(x, y, size, size, -PI / 2, map(0, fillHeight, size, -PI / 2, PI / 2), OPEN);
-  
-  let Portata = data.getColumn('discharge');
-  for (let j = 0; j < Portata; j++) {
-    //disegna pallini
-    noStroke();
-    fill(100, 150, 255, 150);
-    // Creo angolo casuale
+  text(rowData.name, x, y + 90);
+  // temperatura massima
+  let numDroplets = rowData.max_temp;
+  for (let j = 0; j < numDroplets; j++) {
+    // posizione casuale all'interno della goccia
     let angle = random(TWO_PI);
-    let radius = random(size / 2);
-    push();
-    //mi pongo al centro del glifo
-    translate(x, y);
-    //ruoto in base alla variabile angle
-    rotate(angle);
-    //mi sposto in funzione del raggio
-    translate(radius, 0);
-    // disegno il pallino
-    ellipse(0, 0, 2, 2);
-    //ripristino assi
-    pop();
+    let radius = random(size / 3);
+    let xPos = x + cos(angle) * radius;
+    let yPos = y + sin(angle) * radius;
+    fill(dotColor);
+    strokeWeight(2);
+    stroke("#cde0e7");
+    ellipse(xPos, yPos, 6, 6);
   }
+  fill(textColor);
+  noStroke();
+  textAlign(CENTER, CENTER);
+  textSize(16);
+  text(rowData.max_temp + '°', x, y - size / 2 - 30);
+}
+
+function drawWavyLine(startX, startY, length) {
+  let waveAmplitude = 10;  // altezza
+  let waveFrequency = 0.05;  // frequenza dell'onda
+  stroke(lineColor);
+  strokeWeight(3);
+  noFill();
+  let waveLength = length * 0.1;
+  beginShape();
+  for (let x = startX; x < startX + waveLength; x++) {
+    // altezza dell'onda con funzione seno
+    let yOffset = waveAmplitude * sin(waveFrequency * (x - startX));  // offset y
+    vertex(x, startY + yOffset);
+  }
+  endShape();
 }
