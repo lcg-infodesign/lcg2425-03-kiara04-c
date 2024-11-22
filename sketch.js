@@ -16,7 +16,8 @@ let padding = 20;
 
 function setup() {
   let totalHeight = 120 + circleSize * 2 * data.getRowCount() + padding * data.getRowCount();
-  createCanvas(windowWidth, totalHeight);
+  let totalWidth = circleSize * 11;
+  createCanvas(totalWidth, totalHeight);
   background(pageColor);
   dataObj = data.getObject();
 
