@@ -57,7 +57,7 @@ function drawGlyph(x, y, size, rowData) {
   noStroke();
   textAlign(CENTER, CENTER);
   textSize(14);
-  text(rowData.length + 'km', x, y + size / 2 + 50);
+  text("(" + rowData.length + ' km)', x, y + size / 2 + 50);
   //scrivo il nome
   fill(textColor);
   noStroke();
@@ -74,13 +74,13 @@ function drawGlyph(x, y, size, rowData) {
     let yPos = y + sin(angle) * radius;
     fill(dotColor);
     strokeWeight(2);
-    stroke("#cde0e7");
+    stroke(textColor);
     ellipse(xPos, yPos, 6, 6);
   }
   fill(textColor);
   noStroke();
   textAlign(CENTER, CENTER);
-  textSize(16);
+  textSize(18);
   text(rowData.max_temp + '°', x, y - size / 2 - 30);
 }
 
